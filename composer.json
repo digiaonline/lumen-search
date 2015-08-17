@@ -14,5 +14,10 @@
     },
     "suggest": {
       "doctrine/orm": "To use the QueryAdapter."
+    },
+    "autoload": {
+      "psr-4": {
+        "Nord\\Lumen\\Search\\": "src"
+      }
     }
 }
