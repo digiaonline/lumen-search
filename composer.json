@@ -1,0 +1,18 @@
+{
+    "name": "nordsoftware/lumen-search",
+    "description": "Search module for the Lumen PHP framework.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christoffer Niska",
+            "email": "christofferniska@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "pagerfanta/pagerfanta": "~1.0@dev"
+    },
+    "suggest": {
+      "doctrine/orm": "To use the QueryAdapter."
+    }
+}
