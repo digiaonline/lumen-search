@@ -1,9 +1,14 @@
 <?php namespace Nord\Lumen\Search;
 
-use Nord\Lumen\Search\Contracts\SearchAdapter as SearchAdapterContract;
+use Nord\Lumen\Search\Contracts\SearchAdapter;
 
-abstract class SearchAdapter implements SearchAdapterContract
+class Search
 {
+
+    /**
+     * @var SearchAdapter
+     */
+    private $adapter;
 
     /**
      * @var Filter[]
@@ -17,15 +22,17 @@ abstract class SearchAdapter implements SearchAdapterContract
 
 
     /**
-     * SearchAdapter constructor.
+     * Search constructor.
      *
-     * @param array  $filters
-     * @param string $sort
+     * @param string        $filter
+     * @param string        $sort
+     * @param SearchAdapter $adapter
      */
-    public function __construct(array $filters, $sort)
+    public function __construct($filter, $sort, SearchAdapter $adapter)
     {
-        $this->setFilters($filters);
+        $this->setFilters($filter);
         $this->setSorts($sort);
+        $this->setAdapter($adapter);
     }
 
 
@@ -37,7 +44,7 @@ abstract class SearchAdapter implements SearchAdapterContract
         $this->applyFilters();
         $this->applySorts();
 
-        return $this->getResult();
+        return $this->adapter->getResult();
     }
 
 
@@ -49,7 +56,7 @@ abstract class SearchAdapter implements SearchAdapterContract
         $this->applyFilters();
         $this->applySorts();
 
-        return $this->getPartialResult(new Pagination($pageNumber, $pageSize));
+        return $this->adapter->getPartialResult(new Pagination($pageNumber, $pageSize));
     }
 
 
@@ -61,34 +68,39 @@ abstract class SearchAdapter implements SearchAdapterContract
         foreach ($this->filters as $filter) {
             $property = $filter->getProperty();
             $value    = $filter->getValue();
-            $type     = $filter->getType();
 
-            switch ($type) {
+            switch ($filter->getType()) {
                 case Filter::TYPE_BETWEEN:
                     list ($from, $to) = explode(',', $value);
-                    $this->applyBetweenFilter($property, $from, $to);
+                    $this->adapter->applyBetweenFilter($property, $from, $to);
                     break;
                 case Filter::TYPE_NOT_EQUALS:
-                    $this->applyNotEqualsFilter($property, $value);
+                    $this->adapter->applyNotEqualsFilter($property, $value);
                     break;
                 case Filter::TYPE_GREATER_THAN:
-                    $this->applyGreaterThanFilter($property, $value);
+                    $this->adapter->applyGreaterThanFilter($property, $value);
                     break;
                 case Filter::TYPE_LESS_THAN:
-                    $this->applyLessThanFilter($property, $value);
+                    $this->adapter->applyLessThanFilter($property, $value);
                     break;
                 case Filter::TYPE_GREATER_THAN_OR_EQUALS:
-                    $this->applyGreaterThanOrEqualsFilter($property, $value);
+                    $this->adapter->applyGreaterThanOrEqualsFilter($property, $value);
                     break;
                 case Filter::TYPE_LESS_THAN_OR_EQUALS:
-                    $this->applyLessThanOrEqualsFilter($property, $value);
+                    $this->adapter->applyLessThanOrEqualsFilter($property, $value);
+                    break;
+                case Filter::TYPE_BEGINS_WITH:
+                    $this->adapter->applyBeginsWithFilter($property, $value);
+                    break;
+                case Filter::TYPE_ENDS_WITH:
+                    $this->adapter->applyEndsWithFilter($property, $value);
                     break;
                 case Filter::TYPE_FREE_TEXT:
-                    $this->applyFreeTextFilter($property, $value);
+                    $this->adapter->applyFreeTextFilter($property, $value);
                     break;
                 case Filter::TYPE_EQUALS:
                 default:
-                    $this->applyEqualsFilter($property, $value);
+                    $this->adapter->applyEqualsFilter($property, $value);
                     break;
             }
         }
@@ -101,17 +113,17 @@ abstract class SearchAdapter implements SearchAdapterContract
     private function applySorts()
     {
         foreach ($this->sorts as $sort) {
-            $this->applySort($sort->getProperty(), $sort->getDirection());
+            $this->adapter->applySort($sort->getProperty(), $sort->getDirection());
         }
     }
 
 
     /**
-     * @param array $filters
+     * @param string $filter
      */
-    private function setFilters(array $filters)
+    private function setFilters($filter)
     {
-        foreach ($filters as $property => $value) {
+        foreach (Filter::stringToArray($filter) as $property => $value) {
             if (!empty($value)) {
                 $this->filters[] = new Filter($property, $value);
             }
@@ -129,5 +141,14 @@ abstract class SearchAdapter implements SearchAdapterContract
                 $this->sorts[] = new Sort($value);
             }
         }
+    }
+
+
+    /**
+     * @param SearchAdapter $adapter
+     */
+    private function setAdapter(SearchAdapter $adapter)
+    {
+        $this->adapter = $adapter;
     }
 }

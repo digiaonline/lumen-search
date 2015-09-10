@@ -5,14 +5,19 @@ use InvalidArgumentException;
 class Filter
 {
 
+    const SEPARATOR = '|';
+    const DELIMITER = ':';
+
     const TYPE_EQUALS                 = 'eq';
     const TYPE_NOT_EQUALS             = 'neq';
     const TYPE_GREATER_THAN           = 'gt';
     const TYPE_LESS_THAN              = 'lt';
     const TYPE_GREATER_THAN_OR_EQUALS = 'gte';
     const TYPE_LESS_THAN_OR_EQUALS    = 'lte';
+    const TYPE_BEGINS_WITH            = 'bw';
+    const TYPE_ENDS_WITH              = 'ew';
     const TYPE_FREE_TEXT              = 'ft';
-    const TYPE_BETWEEN                = 'between';
+    const TYPE_BETWEEN                = 'bt';
 
     /**
      * @var string
@@ -39,6 +44,8 @@ class Filter
         self::TYPE_LESS_THAN,
         self::TYPE_GREATER_THAN_OR_EQUALS,
         self::TYPE_LESS_THAN_OR_EQUALS,
+        self::TYPE_BEGINS_WITH,
+        self::TYPE_ENDS_WITH,
         self::TYPE_FREE_TEXT,
         self::TYPE_BETWEEN,
     ];
@@ -145,7 +152,7 @@ class Filter
      */
     private function handleValueTypePair($value)
     {
-        list ($value, $type) = explode(':', $value);
+        list ($value, $type) = explode(self::DELIMITER, $value);
 
         $this->setValue($value);
         $this->setType($type);
@@ -179,7 +186,7 @@ class Filter
      */
     private function isValueTypePair($value)
     {
-        return is_string($value) && strpos($value, ':') !== false;
+        return is_string($value) && strpos($value, self::DELIMITER) !== false;
     }
 
 
@@ -202,5 +209,28 @@ class Filter
     private function isValue($value)
     {
         return is_string($value);
+    }
+
+
+    /**
+     * @param string $string
+     *
+     * @return array
+     */
+    public static function stringToArray($string)
+    {
+        $array = [];
+
+        if (!empty($string)) {
+            $filters = strpos($string, self::SEPARATOR) !== false ? explode(self::SEPARATOR, $string) : [$string];
+
+            foreach ($filters as $string) {
+                list($property, $value) = explode(self::DELIMITER, $string, 2);
+
+                $array[$property] = $value;
+            }
+        }
+
+        return $array;
     }
 }
