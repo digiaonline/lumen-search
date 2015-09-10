@@ -59,6 +59,20 @@ interface SearchAdapter
      * @param string $property
      * @param mixed  $value
      */
+    public function applyBeginsWithFilter($property, $value);
+
+
+    /**
+     * @param string $property
+     * @param mixed  $value
+     */
+    public function applyEndsWithFilter($property, $value);
+
+
+    /**
+     * @param string $property
+     * @param mixed  $value
+     */
     public function applyEqualsFilter($property, $value);
 
 

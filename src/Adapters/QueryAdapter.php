@@ -3,10 +3,10 @@
 use Doctrine\ORM\QueryBuilder;
 use Nord\Lumen\Search\Pagination;
 use Nord\Lumen\Search\Result;
-use Nord\Lumen\Search\SearchAdapter;
+use Nord\Lumen\Search\Contracts\SearchAdapter as SearchAdapterContract;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
-class QueryAdapter extends SearchAdapter
+class QueryAdapter implements SearchAdapterContract
 {
 
     /**
@@ -25,14 +25,12 @@ class QueryAdapter extends SearchAdapter
      *
      * @param QueryBuilder $queryBuilder
      * @param string       $tableAlias
-     * @param array        $filters
+     * @param string       $filter
      * @param string       $sort
      * @param Pagination   $pagination
      */
-    public function __construct(QueryBuilder $queryBuilder, $tableAlias, array $filters, $sort)
+    public function __construct(QueryBuilder $queryBuilder, $tableAlias)
     {
-        parent::__construct($filters, $sort);
-
         $this->queryBuilder = $queryBuilder;
         $this->tableAlias   = $tableAlias;
     }
@@ -108,6 +106,28 @@ class QueryAdapter extends SearchAdapter
         $this->queryBuilder
             ->andWhere("$this->tableAlias.$property <= :$property")
             ->setParameter($property, $value);
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function applyBeginsWithFilter($property, $value)
+    {
+        $this->queryBuilder
+            ->andWhere("$this->tableAlias.$property LIKE :$property")
+            ->setParameter($property, "%$value");
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function applyEndsWithFilter($property, $value)
+    {
+        $this->queryBuilder
+            ->andWhere("$this->tableAlias.$property LIKE :$property")
+            ->setParameter($property, "$value%");
     }
 
 
