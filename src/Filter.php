@@ -1,6 +1,6 @@
 <?php namespace Nord\Lumen\Search;
 
-use InvalidArgumentException;
+use Nord\Lumen\Core\Exception\InvalidArgument;
 
 class Filter
 {
@@ -93,11 +93,13 @@ class Filter
 
     /**
      * @param string $property
+     *
+     * @throws InvalidArgument
      */
     private function setProperty($property)
     {
         if (empty($property)) {
-            throw new InvalidArgumentException('Filter property cannot be empty.');
+            throw new InvalidArgument('Filter property cannot be empty.');
         }
 
         $this->property = $property;
@@ -106,11 +108,13 @@ class Filter
 
     /**
      * @param string $value
+     *
+     * @throws InvalidArgument
      */
     private function setValue($value)
     {
-        if (empty($value)) {
-            throw new InvalidArgumentException('Filter value cannot be empty.');
+        if (mb_strlen($value) === 0) {
+            throw new InvalidArgument('Filter value cannot be empty.');
         }
 
         $this->value = $value;
@@ -119,11 +123,13 @@ class Filter
 
     /**
      * @param string $type
+     *
+     * @throws InvalidArgument
      */
     private function setType($type)
     {
         if (!in_array($type, $this->validTypes)) {
-            throw new InvalidArgumentException("Filter type '$type' is not supported.");
+            throw new InvalidArgument("Filter type '$type' is not supported.");
         }
 
         $this->type = $type;
@@ -132,6 +138,8 @@ class Filter
 
     /**
      * @param string $value
+     *
+     * @throws InvalidArgument
      */
     private function parseValue($value)
     {
@@ -142,7 +150,7 @@ class Filter
         } elseif ($this->isValue($value)) {
             $this->handleValue($value);
         } elseif (!empty($value)) {
-            throw new InvalidArgumentException('Filter value is malformed.');
+            throw new InvalidArgument('Filter value is malformed.');
         }
     }
 
@@ -208,29 +216,6 @@ class Filter
      */
     private function isValue($value)
     {
-        return is_string($value);
-    }
-
-
-    /**
-     * @param string $string
-     *
-     * @return array
-     */
-    public static function stringToArray($string)
-    {
-        $array = [];
-
-        if (!empty($string)) {
-            $filters = strpos($string, self::SEPARATOR) !== false ? explode(self::SEPARATOR, $string) : [$string];
-
-            foreach ($filters as $string) {
-                list($property, $value) = explode(self::DELIMITER, $string, 2);
-
-                $array[$property] = $value;
-            }
-        }
-
-        return $array;
+        return is_string($value) || is_integer($value);
     }
 }

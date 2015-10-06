@@ -1,14 +1,10 @@
 <?php namespace Nord\Lumen\Search;
 
+use Nord\Lumen\Core\Exception\InvalidArgument;
 use Nord\Lumen\Search\Contracts\SearchAdapter;
 
 class Search
 {
-
-    /**
-     * @var SearchAdapter
-     */
-    private $adapter;
 
     /**
      * @var Filter[]
@@ -20,18 +16,30 @@ class Search
      */
     private $sorts = [];
 
+    /**
+     * @var SearchAdapter
+     */
+    private $adapter;
+
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
 
     /**
      * Search constructor.
      *
-     * @param string        $filter
-     * @param string        $sort
+     * @param mixed         $filters
+     * @param mixed         $sorts
      * @param SearchAdapter $adapter
+     * @param array         $config
      */
-    public function __construct($filter, $sort, SearchAdapter $adapter)
+    public function __construct($filters, $sorts, SearchAdapter $adapter, array $config = [])
     {
-        $this->setFilters($filter);
-        $this->setSorts($sort);
+        $this->setConfiguration(new Configuration($config));
+        $this->setFilters($filters);
+        $this->setSorts($sorts);
         $this->setAdapter($adapter);
     }
 
@@ -119,26 +127,91 @@ class Search
 
 
     /**
-     * @param string $filter
+     * @param $string
+     *
+     * @return array
+     * @throws InvalidArgument
      */
-    private function setFilters($filter)
+    private function parseFilterString($string)
     {
-        foreach (Filter::stringToArray($filter) as $property => $value) {
+        if (!is_string($string)) {
+            throw new InvalidArgument('Search filter is malformed.');
+        }
+
+        return $this->parseString($string);
+    }
+
+
+    /**
+     * @param $string
+     *
+     * @return array
+     * @throws InvalidArgument
+     */
+    private function parseSortString($string)
+    {
+        if (!is_string($string)) {
+            throw new InvalidArgument('Search sort is malformed.');
+        }
+
+        return $this->parseString($string);
+    }
+
+
+    /**
+     * @param string $string
+     *
+     * @return array
+     */
+    private function parseString($string)
+    {
+        $array = [];
+
+        if (mb_strlen($string)) {
+            $separator = $this->configuration->getSeparator();
+            $delimiter = $this->configuration->getDelimiter();
+            $items     = strpos($string, $separator) !== false ? explode($separator, $string) : [$string];
+
+            foreach ($items as $item) {
+                list($property, $value) = explode($delimiter, $item, 2);
+
+                $array[$property] = $value;
+            }
+        }
+
+        return $array;
+    }
+
+
+    /**
+     * @param mixed $filters
+     */
+    private function setFilters($filters)
+    {
+        if (!is_array($filters)) {
+            $filters = $this->parseFilterString($filters);
+        }
+
+        foreach ($filters as $property => $value) {
             if (!empty($value)) {
-                $this->filters[] = new Filter($property, $value);
+                $this->filters[$property] = $value instanceof Filter ? $value : new Filter($property, $value);
             }
         }
     }
 
 
     /**
-     * @param string $sort
+     * @param mixed $sorts
      */
-    private function setSorts($sort)
+    private function setSorts($sorts)
     {
-        foreach (Sort::stringToArray($sort) as $value) {
+        if (!is_array($sorts)) {
+            $sorts = $this->parseSortString($sorts);
+        }
+
+        foreach ($sorts as $property => $value) {
             if (!empty($value)) {
-                $this->sorts[] = new Sort($value);
+                $this->sorts[$property] = $value instanceof Sort ? $value : new Sort($property, $value);
             }
         }
     }
@@ -150,5 +223,14 @@ class Search
     private function setAdapter(SearchAdapter $adapter)
     {
         $this->adapter = $adapter;
+    }
+
+
+    /**
+     * @param Configuration $configuration
+     */
+    private function setConfiguration(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
     }
 }
