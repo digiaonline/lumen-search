@@ -1,11 +1,11 @@
 <?php namespace Nord\Lumen\Search;
 
-use InvalidArgumentException;
+use Nord\Lumen\Core\Exception\InvalidArgument;
 
 class Sort
 {
 
-    const DIRECTION_ASCENDING = 'asc';
+    const DIRECTION_ASCENDING  = 'asc';
     const DIRECTION_DESCENDING = 'desc';
 
     /**
@@ -27,11 +27,13 @@ class Sort
     /**
      * Sort constructor.
      *
-     * @param string $sort
+     * @param string $property
+     * @param string $value
      */
-    public function __construct($sort)
+    public function __construct($property, $value)
     {
-        $this->parseSort($sort);
+        $this->setProperty($property);
+        $this->parseValue($value);
     }
 
 
@@ -67,8 +69,8 @@ class Sort
      */
     private function setDirection($direction)
     {
-        if (! in_array($direction, $this->validDirections)) {
-            throw new InvalidArgumentException("Sort direction '$direction' is not supported.");
+        if (!in_array($direction, $this->validDirections)) {
+            throw new InvalidArgument("Sort direction '$direction' is not supported.");
         }
 
         $this->direction = $direction;
@@ -78,69 +80,23 @@ class Sort
     /**
      * @param string $value
      */
-    private function parseSort($value)
+    private function parseValue($value)
     {
-        if ($this->isPropertyAndDirectionPair($value)) {
-            $this->handlePropertyAndDirectionPair($value);
-        } elseif ($this->isProperty($value)) {
-            $this->handleProperty($value);
+        if ($this->isValue($value)) {
+            $this->setDirection($value);
         } elseif (!empty($value)) {
-            throw new InvalidArgumentException('Sort value is malformed.');
+            throw new InvalidArgument('Sort value is malformed.');
         }
     }
 
 
     /**
      * @param string $value
-     */
-    private function handlePropertyAndDirectionPair($value)
-    {
-        list ($property, $direction) = explode(':', $value);
-
-        $this->setProperty($property);
-        $this->setDirection($direction);
-    }
-
-
-    /**
-     * @param string $value
-     */
-    private function handleProperty($value)
-    {
-        $this->setProperty($value);
-        $this->setDirection(self::DIRECTION_ASCENDING);
-    }
-
-
-    /**
-     * @param string $value
      *
      * @return bool
      */
-    private function isPropertyAndDirectionPair($value)
-    {
-        return strpos($value, ':') !== false;
-    }
-
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isProperty($value)
+    private function isValue($value)
     {
         return is_string($value);
-    }
-
-
-    /**
-     * @param string $string
-     *
-     * @return array
-     */
-    public static function stringToArray($string)
-    {
-        return strpos($string, ',') !== false ? explode(',', $string) : [$string];
     }
 }
