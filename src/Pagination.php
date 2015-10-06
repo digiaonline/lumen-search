@@ -1,5 +1,7 @@
 <?php namespace Nord\Lumen\Search;
 
+use Nord\Lumen\Core\Exception\InvalidArgument;
+
 class Pagination
 {
 
@@ -22,7 +24,7 @@ class Pagination
      * @param int $pageNumber
      * @param int $pageSize
      */
-    public function __construct($pageNumber, $pageSize)
+    public function __construct($pageNumber = 1, $pageSize = self::DEFAULT_PAGE_SIZE)
     {
         $this->setPageNumber($pageNumber);
         $this->setPageSize($pageSize);
@@ -57,20 +59,36 @@ class Pagination
 
 
     /**
-     * @param $pageNumber
+     * @param int $pageNumber
      */
     private function setPageNumber($pageNumber)
     {
-        $this->pageNumber = $pageNumber !== null ? (int)$pageNumber : 1;
+        if (empty($pageNumber)) {
+            throw new InvalidArgument('Pagination page number cannot be empty.');
+        }
+
+        if (!is_integer($pageNumber)) {
+            throw new InvalidArgument('Pagination page number is malformed.');
+        }
+
+        $this->pageNumber = $pageNumber;
     }
 
 
     /**
-     * @param $pageSize
+     * @param int $pageSize
      */
     private function setPageSize($pageSize)
     {
-        $this->pageSize = $pageSize !== null ? (int)$pageSize : self::DEFAULT_PAGE_SIZE;
+        if (empty($pageSize)) {
+            throw new InvalidArgument('Pagination page size cannot be empty.');
+        }
+
+        if (!is_integer($pageSize)) {
+            throw new InvalidArgument('Pagination page size is malformed.');
+        }
+
+        $this->pageSize = $pageSize;
     }
 
 }
