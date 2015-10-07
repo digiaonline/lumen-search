@@ -92,6 +92,90 @@ class Filter
 
 
     /**
+     * @param string $value
+     *
+     * @throws InvalidArgument
+     */
+    protected function parseValue($value)
+    {
+        if ($this->isValueTypePair($value)) {
+            $this->handleValueTypePair($value);
+        } elseif ($this->isBetween($value)) {
+            $this->handleBetween($value);
+        } elseif ($this->isValue($value)) {
+            $this->handleValue($value);
+        } elseif (!empty($value)) {
+            throw new InvalidArgument('Filter value is malformed.');
+        }
+    }
+
+
+    /**
+     * @param $value
+     */
+    protected function handleValueTypePair($value)
+    {
+        list ($value, $type) = explode(self::DELIMITER, $value);
+
+        $this->setValue($value);
+        $this->setType($type);
+    }
+
+
+    /**
+     * @param string $value
+     */
+    protected function handleBetween($value)
+    {
+        $this->setValue($value);
+        $this->setType(self::TYPE_BETWEEN);
+    }
+
+
+    /**
+     * @param string $value
+     */
+    protected function handleValue($value)
+    {
+        $this->setValue($value);
+        $this->setType(self::TYPE_EQUALS);
+    }
+
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function isValueTypePair($value)
+    {
+        return is_string($value) && strpos($value, self::DELIMITER) !== false;
+    }
+
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function isBetween($value)
+    {
+        return is_string($value) && strpos($value, ',') !== false;
+    }
+
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function isValue($value)
+    {
+        return is_string($value) || is_integer($value);
+    }
+
+
+    /**
      * @param string $property
      *
      * @throws InvalidArgument
@@ -133,89 +217,5 @@ class Filter
         }
 
         $this->type = $type;
-    }
-
-
-    /**
-     * @param string $value
-     *
-     * @throws InvalidArgument
-     */
-    private function parseValue($value)
-    {
-        if ($this->isValueTypePair($value)) {
-            $this->handleValueTypePair($value);
-        } elseif ($this->isBetween($value)) {
-            $this->handleBetween($value);
-        } elseif ($this->isValue($value)) {
-            $this->handleValue($value);
-        } elseif (!empty($value)) {
-            throw new InvalidArgument('Filter value is malformed.');
-        }
-    }
-
-
-    /**
-     * @param $value
-     */
-    private function handleValueTypePair($value)
-    {
-        list ($value, $type) = explode(self::DELIMITER, $value);
-
-        $this->setValue($value);
-        $this->setType($type);
-    }
-
-
-    /**
-     * @param string $value
-     */
-    private function handleBetween($value)
-    {
-        $this->setValue($value);
-        $this->setType(self::TYPE_BETWEEN);
-    }
-
-
-    /**
-     * @param string $value
-     */
-    private function handleValue($value)
-    {
-        $this->setValue($value);
-        $this->setType(self::TYPE_EQUALS);
-    }
-
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isValueTypePair($value)
-    {
-        return is_string($value) && strpos($value, self::DELIMITER) !== false;
-    }
-
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isBetween($value)
-    {
-        return is_string($value) && strpos($value, ',') !== false;
-    }
-
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isValue($value)
-    {
-        return is_string($value) || is_integer($value);
     }
 }

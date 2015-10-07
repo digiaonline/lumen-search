@@ -56,6 +56,30 @@ class Sort
 
 
     /**
+     * @param string $value
+     */
+    protected function parseValue($value)
+    {
+        if ($this->isValue($value)) {
+            $this->setDirection($value);
+        } elseif (!empty($value)) {
+            throw new InvalidArgument('Sort value is malformed.');
+        }
+    }
+
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function isValue($value)
+    {
+        return is_string($value);
+    }
+
+
+    /**
      * @param string $property
      */
     private function setProperty($property)
@@ -74,29 +98,5 @@ class Sort
         }
 
         $this->direction = $direction;
-    }
-
-
-    /**
-     * @param string $value
-     */
-    private function parseValue($value)
-    {
-        if ($this->isValue($value)) {
-            $this->setDirection($value);
-        } elseif (!empty($value)) {
-            throw new InvalidArgument('Sort value is malformed.');
-        }
-    }
-
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function isValue($value)
-    {
-        return is_string($value);
     }
 }
