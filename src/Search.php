@@ -22,9 +22,9 @@ class Search
     private $adapter;
 
     /**
-     * @var Configuration
+     * @var StringParser
      */
-    private $configuration;
+    private $parser;
 
 
     /**
@@ -33,11 +33,11 @@ class Search
      * @param mixed         $filters
      * @param mixed         $sorts
      * @param SearchAdapter $adapter
-     * @param array         $config
+     * @param StringParser  $parser
      */
-    public function __construct($filters, $sorts, SearchAdapter $adapter, array $config = [])
+    public function __construct($filters, $sorts, SearchAdapter $adapter, StringParser $parser = null)
     {
-        $this->setConfiguration(new Configuration($config));
+        $this->setParser($parser !== null ? $parser : new StringParser());
         $this->setFilters($filters);
         $this->setSorts($sorts);
         $this->setAdapter($adapter);
@@ -71,7 +71,7 @@ class Search
     /**
      *
      */
-    private function applyFilters()
+    protected function applyFilters()
     {
         foreach ($this->filters as $filter) {
             $property = $filter->getProperty();
@@ -118,7 +118,7 @@ class Search
     /**
      *
      */
-    private function applySorts()
+    protected function applySorts()
     {
         foreach ($this->sorts as $sort) {
             $this->adapter->applySort($sort->getProperty(), $sort->getDirection());
@@ -127,69 +127,16 @@ class Search
 
 
     /**
-     * @param $string
-     *
-     * @return array
-     * @throws InvalidArgument
-     */
-    private function parseFilterString($string)
-    {
-        if (!is_string($string)) {
-            throw new InvalidArgument('Search filter is malformed.');
-        }
-
-        return $this->parseString($string);
-    }
-
-
-    /**
-     * @param $string
-     *
-     * @return array
-     * @throws InvalidArgument
-     */
-    private function parseSortString($string)
-    {
-        if (!is_string($string)) {
-            throw new InvalidArgument('Search sort is malformed.');
-        }
-
-        return $this->parseString($string);
-    }
-
-
-    /**
-     * @param string $string
-     *
-     * @return array
-     */
-    private function parseString($string)
-    {
-        $array = [];
-
-        if (mb_strlen($string)) {
-            $separator = $this->configuration->getSeparator();
-            $delimiter = $this->configuration->getDelimiter();
-            $items     = strpos($string, $separator) !== false ? explode($separator, $string) : [$string];
-
-            foreach ($items as $item) {
-                list($property, $value) = explode($delimiter, $item, 2);
-
-                $array[$property] = $value;
-            }
-        }
-
-        return $array;
-    }
-
-
-    /**
      * @param mixed $filters
      */
-    private function setFilters($filters)
+    protected function setFilters($filters)
     {
+        if (empty($filters)) {
+            return;
+        }
+
         if (!is_array($filters)) {
-            $filters = $this->parseFilterString($filters);
+            $filters = $this->parser->parse($filters);
         }
 
         foreach ($filters as $property => $value) {
@@ -203,10 +150,14 @@ class Search
     /**
      * @param mixed $sorts
      */
-    private function setSorts($sorts)
+    protected function setSorts($sorts)
     {
+        if (empty($sorts)) {
+            return;
+        }
+
         if (!is_array($sorts)) {
-            $sorts = $this->parseSortString($sorts);
+            $sorts = $this->parser->parse($sorts);
         }
 
         foreach ($sorts as $property => $value) {
@@ -227,10 +178,10 @@ class Search
 
 
     /**
-     * @param Configuration $configuration
+     * @param StringParser $parser
      */
-    private function setConfiguration(Configuration $configuration)
+    private function setParser(StringParser $parser)
     {
-        $this->configuration = $configuration;
+        $this->parser = $parser;
     }
 }
