@@ -28,12 +28,12 @@ class Sort
      * Sort constructor.
      *
      * @param string $property
-     * @param string $value
+     * @param string $direction
      */
-    public function __construct($property, $value)
+    public function __construct($property, $direction)
     {
         $this->setProperty($property);
-        $this->parseValue($value);
+        $this->setDirection($direction);
     }
 
 
@@ -52,30 +52,6 @@ class Sort
     public function getDirection()
     {
         return $this->direction;
-    }
-
-
-    /**
-     * @param string $value
-     */
-    protected function parseValue($value)
-    {
-        if ($this->isValue($value)) {
-            $this->setDirection($value);
-        } elseif (!empty($value)) {
-            throw new InvalidArgument('Sort value is malformed.');
-        }
-    }
-
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    protected function isValue($value)
-    {
-        return is_string($value);
     }
 
 

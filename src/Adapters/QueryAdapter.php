@@ -1,6 +1,7 @@
 <?php namespace Nord\Lumen\Search\Adapters;
 
 use Doctrine\ORM\QueryBuilder;
+use Nord\Lumen\Search\Formatter\Factory;
 use Nord\Lumen\Search\Pagination;
 use Nord\Lumen\Search\Result;
 use Nord\Lumen\Search\Contracts\SearchAdapter as SearchAdapterContract;
@@ -25,14 +26,25 @@ class QueryAdapter implements SearchAdapterContract
      *
      * @param QueryBuilder $queryBuilder
      * @param string       $tableAlias
-     * @param string       $filter
-     * @param string       $sort
-     * @param Pagination   $pagination
+     * @param Factory      $formatter
      */
-    public function __construct(QueryBuilder $queryBuilder, $tableAlias)
+    public function __construct(QueryBuilder $queryBuilder, $tableAlias, Factory $formatter)
     {
         $this->queryBuilder = $queryBuilder;
         $this->tableAlias   = $tableAlias;
+        $this->formatter    = $formatter;
+    }
+
+
+    /**
+     * @param string $format
+     * @param mixed  $value
+     *
+     * @return mixed
+     */
+    public function formatValue($format, $value)
+    {
+        return $this->formatter->create($format)->format($value);
     }
 
 
@@ -170,7 +182,7 @@ class QueryAdapter implements SearchAdapterContract
      */
     public function getResult()
     {
-        return new Result($this->queryBuilder->getQuery()->execute());
+        return new Result($this->queryBuilder->getQuery()->getResult());
     }
 
 

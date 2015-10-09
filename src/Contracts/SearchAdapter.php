@@ -6,6 +6,15 @@ interface SearchAdapter
 {
 
     /**
+     * @param string $format
+     * @param mixed  $value
+     *
+     * @return mixed
+     */
+    public function formatValue($format, $value);
+
+
+    /**
      * @param string $property
      * @param mixed  $from
      * @param mixed  $to

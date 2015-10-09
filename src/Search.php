@@ -2,6 +2,7 @@
 
 use Nord\Lumen\Core\Exception\InvalidArgument;
 use Nord\Lumen\Search\Contracts\SearchAdapter;
+use ReflectionClass;
 
 class Search
 {
@@ -75,7 +76,12 @@ class Search
     {
         foreach ($this->filters as $filter) {
             $property = $filter->getProperty();
+            $format   = $filter->getFormat();
             $value    = $filter->getValue();
+
+            if ($format !== null) {
+                $value = $this->adapter->formatValue($format, $value);
+            }
 
             switch ($filter->getType()) {
                 case Filter::TYPE_BETWEEN:
@@ -128,6 +134,8 @@ class Search
 
     /**
      * @param mixed $filters
+     *
+     * @throws InvalidArgument
      */
     protected function setFilters($filters)
     {
@@ -135,20 +143,35 @@ class Search
             return;
         }
 
-        if (!is_array($filters)) {
+        if (is_string($filters)) {
             $filters = $this->parser->parse($filters);
         }
 
-        foreach ($filters as $property => $value) {
-            if (!empty($value)) {
-                $this->filters[$property] = $value instanceof Filter ? $value : new Filter($property, $value);
-            }
+        if (!is_array($filters)) {
+            throw new InvalidArgument('Search filter is malformed.');
+        }
+
+        foreach ($filters as $filter) {
+            $this->filters[] = $filter instanceof Filter ? $filter : $this->createFilterFromConfig($filter);
         }
     }
 
 
     /**
+     * @param array $config
+     *
+     * @return Filter
+     */
+    protected function createFilterFromConfig(array $config)
+    {
+        return (new ReflectionClass(Filter::class))->newInstanceArgs($config);
+    }
+
+
+    /**
      * @param mixed $sorts
+     *
+     * @throws InvalidArgument
      */
     protected function setSorts($sorts)
     {
@@ -156,15 +179,28 @@ class Search
             return;
         }
 
-        if (!is_array($sorts)) {
+        if (is_string($sorts)) {
             $sorts = $this->parser->parse($sorts);
         }
 
-        foreach ($sorts as $property => $value) {
-            if (!empty($value)) {
-                $this->sorts[$property] = $value instanceof Sort ? $value : new Sort($property, $value);
-            }
+        if (!is_array($sorts)) {
+            throw new InvalidArgument('Search sort is malformed.');
         }
+
+        foreach ($sorts as $sort) {
+            $this->sorts[] = $sort instanceof Sort ? $sort : $this->createSortFromConfig($sort);
+        }
+    }
+
+
+    /**
+     * @param array $config
+     *
+     * @return Sort
+     */
+    protected function createSortFromConfig(array $config)
+    {
+        return (new ReflectionClass(Sort::class))->newInstanceArgs($config);
     }
 
 
