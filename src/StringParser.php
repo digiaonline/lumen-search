@@ -8,7 +8,7 @@ class StringParser
     /**
      * @var string
      */
-    private $separator = '|';
+    private $separator = ';';
 
     /**
      * @var string
@@ -42,9 +42,7 @@ class StringParser
         $array = [];
 
         foreach ($this->splitItems($string) as $item) {
-            list($property, $value) = $this->splitPropertyAndValue($item);
-
-            $array[$property] = $value;
+            $array[] = $this->splitItem($item);
         }
 
         return $array;
@@ -82,8 +80,8 @@ class StringParser
      *
      * @return array
      */
-    protected function splitPropertyAndValue($string)
+    protected function splitItem($string)
     {
-        return explode($this->delimiter, $string, 2);
+        return explode($this->delimiter, $string);
     }
 }
