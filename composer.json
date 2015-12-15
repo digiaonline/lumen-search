@@ -8,9 +8,8 @@
             "email": "christofferniska@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "pagerfanta/pagerfanta": "~1.0@dev"
+        "pagerfanta/pagerfanta": "~1.0"
     },
     "suggest": {
       "doctrine/orm": "To use the QueryAdapter."
