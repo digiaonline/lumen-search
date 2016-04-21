@@ -3,7 +3,7 @@
 [![Code Climate](https://codeclimate.com/github/nordsoftware/lumen-search/badges/gpa.svg)](https://codeclimate.com/github/nordsoftware/lumen-search)
 [![Latest Stable Version](https://poser.pugx.org/nordsoftware/lumen-search/version)](https://packagist.org/packages/nordsoftware/lumen-search)
 [![Total Downloads](https://poser.pugx.org/nordsoftware/lumen-search/downloads)](https://packagist.org/packages/nordsoftware/lumen-search)
-[![License](https://poser.pugx.org/nordsoftware/lumen-search/license)](https://packagist.org/packages/nordsoftware/lumen-search)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Search module for the [Lumen PHP framework](http://lumen.laravel.com/).
 
