@@ -4,7 +4,6 @@ use Nord\Lumen\Core\Exception\InvalidArgument;
 
 class Filter
 {
-
     const TYPE_EQUALS                 = 'eq';
     const TYPE_NOT_EQUALS             = 'neq';
     const TYPE_GREATER_THAN           = 'gt';

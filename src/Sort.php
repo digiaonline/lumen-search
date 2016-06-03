@@ -4,7 +4,6 @@ use Nord\Lumen\Core\Exception\InvalidArgument;
 
 class Sort
 {
-
     const DIRECTION_ASCENDING  = 'asc';
     const DIRECTION_DESCENDING = 'desc';
 
