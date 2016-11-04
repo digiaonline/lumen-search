@@ -1,20 +1,21 @@
-<?php namespace Nord\Lumen\Search;
+<?php
+
+namespace Nord\Lumen\Search;
 
 use Nord\Lumen\Core\Exception\InvalidArgument;
 
 class Filter
 {
-
-    const TYPE_EQUALS                 = 'eq';
-    const TYPE_NOT_EQUALS             = 'neq';
-    const TYPE_GREATER_THAN           = 'gt';
-    const TYPE_LESS_THAN              = 'lt';
+    const TYPE_EQUALS = 'eq';
+    const TYPE_NOT_EQUALS = 'neq';
+    const TYPE_GREATER_THAN = 'gt';
+    const TYPE_LESS_THAN = 'lt';
     const TYPE_GREATER_THAN_OR_EQUALS = 'gte';
-    const TYPE_LESS_THAN_OR_EQUALS    = 'lte';
-    const TYPE_BEGINS_WITH            = 'bw';
-    const TYPE_ENDS_WITH              = 'ew';
-    const TYPE_FREE_TEXT              = 'ft';
-    const TYPE_BETWEEN                = 'bt';
+    const TYPE_LESS_THAN_OR_EQUALS = 'lte';
+    const TYPE_BEGINS_WITH = 'bw';
+    const TYPE_ENDS_WITH = 'ew';
+    const TYPE_FREE_TEXT = 'ft';
+    const TYPE_BETWEEN = 'bt';
 
     /**
      * @var string
@@ -52,7 +53,6 @@ class Filter
         self::TYPE_BETWEEN,
     ];
 
-
     /**
      * Filter constructor.
      *
@@ -69,7 +69,6 @@ class Filter
         $this->setFormat($format);
     }
 
-
     /**
      * @return string
      */
@@ -77,7 +76,6 @@ class Filter
     {
         return $this->property;
     }
-
 
     /**
      * @return string
@@ -87,7 +85,6 @@ class Filter
         return $this->value;
     }
 
-
     /**
      * @return string
      */
@@ -96,7 +93,6 @@ class Filter
         return $this->type;
     }
 
-
     /**
      * @return string|null
      */
@@ -104,7 +100,6 @@ class Filter
     {
         return $this->format;
     }
-
 
     /**
      * @param string $property
@@ -120,7 +115,6 @@ class Filter
         $this->property = $property;
     }
 
-
     /**
      * @param string $value
      *
@@ -135,7 +129,6 @@ class Filter
         $this->value = $value;
     }
 
-
     /**
      * @param string $type
      *
@@ -149,7 +142,6 @@ class Filter
 
         $this->type = $type;
     }
-
 
     /**
      * @param string|null $format

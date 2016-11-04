@@ -1,4 +1,6 @@
-<?php namespace Nord\Lumen\Search;
+<?php
+
+namespace Nord\Lumen\Search;
 
 use Nord\Lumen\Core\Exception\InvalidArgument;
 use Nord\Lumen\Search\Contracts\SearchAdapter;
@@ -6,7 +8,6 @@ use ReflectionClass;
 
 class Search
 {
-
     /**
      * @var Filter[]
      */
@@ -27,7 +28,6 @@ class Search
      */
     private $parser;
 
-
     /**
      * Search constructor.
      *
@@ -44,9 +44,8 @@ class Search
         $this->setAdapter($adapter);
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function run()
     {
@@ -56,9 +55,8 @@ class Search
         return $this->adapter->getResult();
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function runWithPagination($pageNumber, $pageSize)
     {
@@ -69,15 +67,12 @@ class Search
     }
 
 
-    /**
-     *
-     */
     protected function applyFilters()
     {
         foreach ($this->filters as $filter) {
             $property = $filter->getProperty();
-            $format   = $filter->getFormat();
-            $value    = $filter->getValue();
+            $format = $filter->getFormat();
+            $value = $filter->getValue();
 
             if ($format !== null) {
                 $value = $this->adapter->formatValue($format, $value);
@@ -85,7 +80,7 @@ class Search
 
             switch ($filter->getType()) {
                 case Filter::TYPE_BETWEEN:
-                    list ($from, $to) = explode(',', $value);
+                    list($from, $to) = explode(',', $value);
                     $this->adapter->applyBetweenFilter($property, $from, $to);
                     break;
                 case Filter::TYPE_NOT_EQUALS:
@@ -121,16 +116,12 @@ class Search
     }
 
 
-    /**
-     *
-     */
     protected function applySorts()
     {
         foreach ($this->sorts as $sort) {
             $this->adapter->applySort($sort->getProperty(), $sort->getDirection());
         }
     }
-
 
     /**
      * @param mixed $filters
@@ -156,7 +147,6 @@ class Search
         }
     }
 
-
     /**
      * @param array $config
      *
@@ -166,7 +156,6 @@ class Search
     {
         return (new ReflectionClass(Filter::class))->newInstanceArgs($config);
     }
-
 
     /**
      * @param mixed $sorts
@@ -192,7 +181,6 @@ class Search
         }
     }
 
-
     /**
      * @param array $config
      *
@@ -203,7 +191,6 @@ class Search
         return (new ReflectionClass(Sort::class))->newInstanceArgs($config);
     }
 
-
     /**
      * @param SearchAdapter $adapter
      */
@@ -211,7 +198,6 @@ class Search
     {
         $this->adapter = $adapter;
     }
-
 
     /**
      * @param StringParser $parser

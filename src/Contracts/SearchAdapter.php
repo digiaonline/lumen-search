@@ -1,10 +1,11 @@
-<?php namespace Nord\Lumen\Search\Contracts;
+<?php
+
+namespace Nord\Lumen\Search\Contracts;
 
 use Nord\Lumen\Search\Pagination;
 
 interface SearchAdapter
 {
-
     /**
      * @param string $format
      * @param mixed  $value
@@ -13,7 +14,6 @@ interface SearchAdapter
      */
     public function formatValue($format, $value);
 
-
     /**
      * @param string $property
      * @param mixed  $from
@@ -21,13 +21,11 @@ interface SearchAdapter
      */
     public function applyBetweenFilter($property, $from, $to);
 
-
     /**
      * @param string $property
      * @param mixed  $value
      */
     public function applyNotEqualsFilter($property, $value);
-
 
     /**
      * @param string $property
@@ -35,13 +33,11 @@ interface SearchAdapter
      */
     public function applyGreaterThanFilter($property, $value);
 
-
     /**
      * @param string $property
      * @param mixed  $value
      */
     public function applyLessThanFilter($property, $value);
-
 
     /**
      * @param string $property
@@ -49,13 +45,11 @@ interface SearchAdapter
      */
     public function applyGreaterThanOrEqualsFilter($property, $value);
 
-
     /**
      * @param string $property
      * @param mixed  $value
      */
     public function applyLessThanOrEqualsFilter($property, $value);
-
 
     /**
      * @param string $property
@@ -63,13 +57,11 @@ interface SearchAdapter
      */
     public function applyFreeTextFilter($property, $value);
 
-
     /**
      * @param string $property
      * @param mixed  $value
      */
     public function applyBeginsWithFilter($property, $value);
-
 
     /**
      * @param string $property
@@ -77,13 +69,11 @@ interface SearchAdapter
      */
     public function applyEndsWithFilter($property, $value);
 
-
     /**
      * @param string $property
      * @param mixed  $value
      */
     public function applyEqualsFilter($property, $value);
-
 
     /**
      * @param string $property
@@ -91,12 +81,10 @@ interface SearchAdapter
      */
     public function applySort($property, $direction);
 
-
     /**
      * @return array
      */
     public function getResult();
-
 
     /**
      * @param Pagination $pagination

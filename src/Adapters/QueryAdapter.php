@@ -1,15 +1,16 @@
-<?php namespace Nord\Lumen\Search\Adapters;
+<?php
+
+namespace Nord\Lumen\Search\Adapters;
 
 use Doctrine\ORM\QueryBuilder;
+use Nord\Lumen\Search\Contracts\SearchAdapter as SearchAdapterContract;
 use Nord\Lumen\Search\Formatter\Factory;
 use Nord\Lumen\Search\Pagination;
 use Nord\Lumen\Search\Result;
-use Nord\Lumen\Search\Contracts\SearchAdapter as SearchAdapterContract;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 class QueryAdapter implements SearchAdapterContract
 {
-
     /**
      * @var QueryBuilder
      */
@@ -19,7 +20,6 @@ class QueryAdapter implements SearchAdapterContract
      * @var string
      */
     private $tableAlias;
-
 
     /**
      * QueryAdapter constructor.
@@ -31,10 +31,9 @@ class QueryAdapter implements SearchAdapterContract
     public function __construct(QueryBuilder $queryBuilder, $tableAlias, Factory $formatter)
     {
         $this->queryBuilder = $queryBuilder;
-        $this->tableAlias   = $tableAlias;
-        $this->formatter    = $formatter;
+        $this->tableAlias = $tableAlias;
+        $this->formatter = $formatter;
     }
-
 
     /**
      * @param string $format
@@ -46,7 +45,6 @@ class QueryAdapter implements SearchAdapterContract
     {
         return $this->formatter->create($format)->format($value);
     }
-
 
     /**
      * @param string $property
@@ -60,7 +58,6 @@ class QueryAdapter implements SearchAdapterContract
             ->setParameters(["{$property}_from" => $from, "{$property}_to" => $to]);
     }
 
-
     /**
      * @param string $property
      * @param mixed  $value
@@ -71,7 +68,6 @@ class QueryAdapter implements SearchAdapterContract
             ->andWhere("$this->tableAlias.$property != :$property")
             ->setParameter($property, "%$value%");
     }
-
 
     /**
      * @param string $property
@@ -84,7 +80,6 @@ class QueryAdapter implements SearchAdapterContract
             ->setParameter($property, $value);
     }
 
-
     /**
      * @param string $property
      * @param mixed  $value
@@ -95,7 +90,6 @@ class QueryAdapter implements SearchAdapterContract
             ->andWhere("$this->tableAlias.$property < :$property")
             ->setParameter($property, $value);
     }
-
 
     /**
      * @param string $property
@@ -108,7 +102,6 @@ class QueryAdapter implements SearchAdapterContract
             ->setParameter($property, $value);
     }
 
-
     /**
      * @param string $property
      * @param mixed  $value
@@ -120,9 +113,8 @@ class QueryAdapter implements SearchAdapterContract
             ->setParameter($property, $value);
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function applyBeginsWithFilter($property, $value)
     {
@@ -131,9 +123,8 @@ class QueryAdapter implements SearchAdapterContract
             ->setParameter($property, "%$value");
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function applyEndsWithFilter($property, $value)
     {
@@ -141,7 +132,6 @@ class QueryAdapter implements SearchAdapterContract
             ->andWhere("$this->tableAlias.$property LIKE :$property")
             ->setParameter($property, "$value%");
     }
-
 
     /**
      * @param string $property
@@ -154,7 +144,6 @@ class QueryAdapter implements SearchAdapterContract
             ->setParameter($property, "%$value%");
     }
 
-
     /**
      * @param string $property
      * @param mixed  $value
@@ -166,9 +155,8 @@ class QueryAdapter implements SearchAdapterContract
             ->setParameter($property, $value);
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function applySort($property, $direction)
     {
@@ -176,18 +164,16 @@ class QueryAdapter implements SearchAdapterContract
             ->addOrderBy("$this->tableAlias.$property", $direction);
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getResult()
     {
         return new Result($this->queryBuilder->getQuery()->getResult());
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPartialResult(Pagination $pagination)
     {

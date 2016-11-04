@@ -1,8 +1,9 @@
-<?php namespace Nord\Lumen\Search;
+<?php
+
+namespace Nord\Lumen\Search;
 
 class Result
 {
-
     /**
      * @var array
      */
@@ -23,7 +24,6 @@ class Result
      */
     private $pageSize;
 
-
     /**
      * Result constructor.
      *
@@ -34,12 +34,11 @@ class Result
      */
     public function __construct(array $results, $totalCount = null, $pageNumber = null, $pageSize = null)
     {
-        $this->results    = $results;
+        $this->results = $results;
         $this->totalCount = $totalCount;
         $this->pageNumber = $pageNumber;
-        $this->pageSize   = $pageSize;
+        $this->pageSize = $pageSize;
     }
-
 
     /**
      * @return int
@@ -49,7 +48,6 @@ class Result
         return $this->totalCount > 0 && $this->pageSize > 0 ? ceil($this->totalCount / $this->pageSize) : 1;
     }
 
-
     /**
      * @return array
      */
@@ -57,7 +55,6 @@ class Result
     {
         return $this->results;
     }
-
 
     /**
      * @return int
@@ -67,7 +64,6 @@ class Result
         return $this->totalCount !== null ? $this->totalCount : count($this->results);
     }
 
-
     /**
      * @return int
      */
@@ -75,7 +71,6 @@ class Result
     {
         return $this->pageNumber;
     }
-
 
     /**
      * @return int

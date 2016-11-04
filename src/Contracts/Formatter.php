@@ -1,8 +1,9 @@
-<?php namespace Nord\Lumen\Search\Contracts;
+<?php
+
+namespace Nord\Lumen\Search\Contracts;
 
 interface Formatter
 {
-
     /**
      * @param mixed $value
      *
