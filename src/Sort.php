@@ -1,11 +1,12 @@
-<?php namespace Nord\Lumen\Search;
+<?php
+
+namespace Nord\Lumen\Search;
 
 use Nord\Lumen\Core\Exception\InvalidArgument;
 
 class Sort
 {
-
-    const DIRECTION_ASCENDING  = 'asc';
+    const DIRECTION_ASCENDING = 'asc';
     const DIRECTION_DESCENDING = 'desc';
 
     /**
@@ -23,7 +24,6 @@ class Sort
      */
     private $validDirections = [self::DIRECTION_ASCENDING, self::DIRECTION_DESCENDING];
 
-
     /**
      * Sort constructor.
      *
@@ -36,7 +36,6 @@ class Sort
         $this->setDirection($direction);
     }
 
-
     /**
      * @return string
      */
@@ -44,7 +43,6 @@ class Sort
     {
         return $this->property;
     }
-
 
     /**
      * @return string
@@ -54,7 +52,6 @@ class Sort
         return $this->direction;
     }
 
-
     /**
      * @param string $property
      */
@@ -62,7 +59,6 @@ class Sort
     {
         $this->property = $property;
     }
-
 
     /**
      * @param string $direction

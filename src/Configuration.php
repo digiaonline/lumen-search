@@ -1,8 +1,9 @@
-<?php namespace Nord\Lumen\Search;
+<?php
+
+namespace Nord\Lumen\Search;
 
 class Configuration
 {
-
     /**
      * @var string
      */
@@ -12,7 +13,6 @@ class Configuration
      * @var string
      */
     private $delimiter = ':';
-
 
     /**
      * Configuration constructor.
@@ -24,7 +24,6 @@ class Configuration
         $this->configure($config);
     }
 
-
     /**
      * @return string
      */
@@ -33,7 +32,6 @@ class Configuration
         return $this->separator;
     }
 
-
     /**
      * @return string
      */
@@ -41,7 +39,6 @@ class Configuration
     {
         return $this->delimiter;
     }
-
 
     /**
      * @param array $config

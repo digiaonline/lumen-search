@@ -1,10 +1,11 @@
-<?php namespace Nord\Lumen\Search;
+<?php
+
+namespace Nord\Lumen\Search;
 
 use Nord\Lumen\Core\Exception\InvalidArgument;
 
 class StringParser
 {
-
     /**
      * @var string
      */
@@ -14,7 +15,6 @@ class StringParser
      * @var string
      */
     private $delimiter = ':';
-
 
     /**
      * Configuration constructor.
@@ -26,12 +26,12 @@ class StringParser
         $this->configure($config);
     }
 
-
     /**
      * @param $string
      *
-     * @return array
      * @throws InvalidArgument
+     *
+     * @return array
      */
     public function parse($string)
     {
@@ -48,7 +48,6 @@ class StringParser
         return $array;
     }
 
-
     /**
      * @param array $config
      */
@@ -63,7 +62,6 @@ class StringParser
         }
     }
 
-
     /**
      * @param string $string
      *
@@ -73,7 +71,6 @@ class StringParser
     {
         return strpos($string, $this->separator) !== false ? explode($this->separator, $string) : [$string];
     }
-
 
     /**
      * @param string $string
