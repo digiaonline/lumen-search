@@ -66,7 +66,6 @@ class Search
         return $this->adapter->getPartialResult(new Pagination($pageNumber, $pageSize));
     }
 
-
     protected function applyFilters()
     {
         foreach ($this->filters as $filter) {
@@ -114,7 +113,6 @@ class Search
             }
         }
     }
-
 
     protected function applySorts()
     {
