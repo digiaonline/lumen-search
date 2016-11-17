@@ -85,7 +85,7 @@ class Search
 
             switch ($filter->getType()) {
                 case Filter::TYPE_BETWEEN:
-                    list ($from, $to) = explode(',', $value);
+                    list($from, $to) = explode(',', $value);
                     $this->adapter->applyBetweenFilter($property, $from, $to);
                     break;
                 case Filter::TYPE_NOT_EQUALS:
