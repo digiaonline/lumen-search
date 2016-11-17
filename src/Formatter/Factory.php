@@ -1,11 +1,10 @@
 <?php namespace Nord\Lumen\Search\Formatter;
 
-use Nord\Lumen\Core\Exception\InvalidArgument;
+use Nord\Lumen\Search\Exceptions\InvalidArgument;
 use Nord\Lumen\Search\Contracts\Formatter;
 
 class Factory
 {
-
     const FORMAT_DATE = 'date';
     const FORMAT_LOWERCASE = 'lowercase';
 

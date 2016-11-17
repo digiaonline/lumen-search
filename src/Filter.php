@@ -1,10 +1,9 @@
 <?php namespace Nord\Lumen\Search;
 
-use Nord\Lumen\Core\Exception\InvalidArgument;
+use Nord\Lumen\Search\Exceptions\InvalidArgument;
 
 class Filter
 {
-
     const TYPE_EQUALS                 = 'eq';
     const TYPE_NOT_EQUALS             = 'neq';
     const TYPE_GREATER_THAN           = 'gt';

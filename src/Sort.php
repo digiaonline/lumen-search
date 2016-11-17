@@ -1,10 +1,9 @@
 <?php namespace Nord\Lumen\Search;
 
-use Nord\Lumen\Core\Exception\InvalidArgument;
+use Nord\Lumen\Search\Exceptions\InvalidArgument;
 
 class Sort
 {
-
     const DIRECTION_ASCENDING  = 'asc';
     const DIRECTION_DESCENDING = 'desc';
 
@@ -66,6 +65,8 @@ class Sort
 
     /**
      * @param string $direction
+     *
+     * @throws InvalidArgument
      */
     private function setDirection($direction)
     {
