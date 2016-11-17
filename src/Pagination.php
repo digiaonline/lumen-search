@@ -4,7 +4,6 @@ use Nord\Lumen\Search\Exceptions\InvalidArgument;
 
 class Pagination
 {
-
     const DEFAULT_PAGE_SIZE = 20;
 
     /**
@@ -94,5 +93,4 @@ class Pagination
 
         $this->pageSize = $pageSize;
     }
-
 }
