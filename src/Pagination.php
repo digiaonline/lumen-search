@@ -1,9 +1,10 @@
 <?php namespace Nord\Lumen\Search;
 
-use Nord\Lumen\Core\Exception\InvalidArgument;
+use Nord\Lumen\Search\Exceptions\InvalidArgument;
 
 class Pagination
 {
+
     const DEFAULT_PAGE_SIZE = 20;
 
     /**
@@ -59,6 +60,8 @@ class Pagination
 
     /**
      * @param int $pageNumber
+     *
+     * @throws InvalidArgument
      */
     private function setPageNumber($pageNumber)
     {
@@ -76,6 +79,8 @@ class Pagination
 
     /**
      * @param int $pageSize
+     *
+     * @throws InvalidArgument
      */
     private function setPageSize($pageSize)
     {
@@ -89,4 +94,5 @@ class Pagination
 
         $this->pageSize = $pageSize;
     }
+
 }
