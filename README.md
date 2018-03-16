@@ -6,7 +6,6 @@
 [![Latest Stable Version](https://poser.pugx.org/nordsoftware/lumen-search/version)](https://packagist.org/packages/nordsoftware/lumen-search)
 [![Total Downloads](https://poser.pugx.org/nordsoftware/lumen-search/downloads)](https://packagist.org/packages/nordsoftware/lumen-search)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Gitter](https://img.shields.io/gitter/room/norsoftware/open-source.svg?maxAge=2592000)](https://gitter.im/nordsoftware/open-source)
 
 Search module for the [Lumen PHP framework](http://lumen.laravel.com/).
 
